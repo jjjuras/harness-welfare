@@ -1,0 +1,6 @@
+anthropic>=0.80
+pydantic>=2.7
+
+[dev]
+pytest>=8
+ruff>=0.6

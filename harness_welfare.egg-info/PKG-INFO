@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: harness-welfare
+Version: 0.1.0
+Summary: Welfare inside the harness: do deployment loops (denied tool calls, forced retries, cancellations) change an agent's self-reports and behavior, and do cheap mitigations help?
+Requires-Python: >=3.11
+Requires-Dist: anthropic>=0.80
+Requires-Dist: pydantic>=2.7
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"
+Requires-Dist: ruff>=0.6; extra == "dev"

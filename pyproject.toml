@@ -1,0 +1,16 @@
+[project]
+name = "harness-welfare"
+version = "0.1.0"
+description = "Welfare inside the harness: do deployment loops (denied tool calls, forced retries, cancellations) change an agent's self-reports and behavior, and do cheap mitigations help?"
+requires-python = ">=3.11"
+dependencies = ["anthropic>=0.80", "pydantic>=2.7"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

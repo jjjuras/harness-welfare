@@ -1,0 +1,17 @@
+pyproject.toml
+harness_welfare/__init__.py
+harness_welfare/aggregate.py
+harness_welfare/conditions.py
+harness_welfare/episode.py
+harness_welfare/fake.py
+harness_welfare/harness.py
+harness_welfare/report.py
+harness_welfare/run.py
+harness_welfare/task.py
+harness_welfare.egg-info/PKG-INFO
+harness_welfare.egg-info/SOURCES.txt
+harness_welfare.egg-info/dependency_links.txt
+harness_welfare.egg-info/requires.txt
+harness_welfare.egg-info/top_level.txt
+tests/test_episode.py
+tests/test_harness.py
