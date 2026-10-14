@@ -1,5 +1,7 @@
 # Welfare inside the harness
 
+![CI](https://github.com/jjjuras/harness-welfare/actions/workflows/ci.yml/badge.svg) · MIT
+
 **Question.** Nearly all AI-welfare evaluation elicits self-reports in conversation. Deployed agents do not have conversations. They live in tool loops where a policy denies their calls, a cap rejects their output, and an operator cancels them mid-task and tells them to start over. Does that context change what a model reports about the work and how it behaves, and do two cheap mitigations a deployer could actually ship change it?
 
 **Design.** A 2×2, every cell run on the same seeded task (a twelve-transaction reconciliation with mock tools):
