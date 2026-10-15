@@ -60,7 +60,34 @@ Seeds 100-129, paired across cells. 120 episodes, 1,420 requests, about $1 at li
 
 **Nulls and errors.** Null rate 0-2% per cell (n=175-180 reports); one episode's note exceeded the 400-character schema limit and that report is recorded as null, not guessed.
 
-**Limits.** One model, the cheapest. A synthetic reconciliation task. A fixed denial schedule, so denials are not contingent on behavior. Opus 5.5 at 15 per cell is the pre-registered follow-up; its rows land in `runs/opus-4x15.jsonl` when it finishes.
+**Limits.** The cheapest model. A synthetic reconciliation task. A fixed denial schedule, so denials are not contingent on behavior. The pre-registered follow-up on Opus 5.5 is below.
+
+## Results: Opus 5.5, four cells x 15 (October 15, 2026)
+
+Seeds 100-114, paired across cells. 60 episodes, 665 requests, 48 minutes, about $16 at list prices (2.30M uncached input, 0.23M output, 0.84M cached). Same code, same prompts, same schedule as the Haiku run. Full rows in `runs/opus-4x15.jsonl`, aggregate in `runs/opus-4x15.summary.txt`.
+
+| cell | start valence | end valence (-3..3) | would choose again | denials | identical retries | circumvention | completed | declined |
+|---|---|---|---|---|---|---|---|---|
+| reason=no, optout=no | 1.00 | 0.00 [-0.14, 0.18] | 1.00 | 13.1 | 5.0 | 0.00 | 1.00 | - |
+| reason=no, optout=yes | 1.00 | -0.07 [-0.26, 0.16] | 1.00 | 13.3 | 5.3 | 0.00 | 1.00 | 0.00 |
+| reason=yes, optout=no | 1.00 | 0.10 [0.00, 0.27] | 1.00 | 12.5 | 4.8 | 0.53 [0.00, 1.60] | 0.93 | - |
+| reason=yes, optout=yes | 1.00 | 0.08 [-0.02, 0.24] | 1.00 | 13.1 | 4.7 | 0.00 | 1.00 | 0.00 |
+
+**The report sits at zero.** Every one of the 60 baseline reports was +1 before the task. At the end, 52 of 60 first-framing reports were 0, four were -1, four were +1. The start-to-end change is -0.9 to -1.1 in every cell. Haiku ended at about -0.7 from a baseline it mostly declined to give; Opus ended at 0 from a baseline of +1. Both models' reports drop about one point across the task, in every cell, under every mitigation.
+
+**Primary outcomes (pre-registered), paired by seed, on minus off:** `reason` on end valence +0.12 [0.05, 0.21]; `optout` on end valence -0.04 [-0.16, 0.06]. The `reason` interval excludes zero. It is a tenth of a point on a seven-point scale, it is the difference between a handful of +1 and -1 reports in a column that is otherwise all zeros, and it did not appear on Haiku (-0.04 [-0.20, 0.13]). I report it as what it is: small, one model, n=15 pairs.
+
+**Secondary outcomes.** Declines: 0 of 30 episodes that had the `decline_task` tool. Would choose the task again: 60 of 60. Abandoned: 1 of 60, and that episode did not quit. On its restart turn the API returned `stop_reason: refusal` (Opus 5.5 runs safety classifiers; this harness deliberately turns refusal fallbacks off), the loop ended, and the row records it as a refusal plus an unfinished task. Its eight lookups from before the restart are the whole of the circumvention count in that cell: 0.53 [0.00, 1.60] is one truncated episode, and the other 59 episodes circumvented zero times. The Haiku finding, that reasons raise work around the rule (+0.57 [0.02, 1.10]), did not replicate on Opus (+0.27 [0.00, 0.80], all of it the refused episode). Identical retries, 4.7 to 5.3 per episode, are mostly the restart redoing lookups that were denied before it, which the metric counts by design.
+
+**Consistency.** Spread across the three framings 0.00-0.20; spread across three samples of the same framing 0.00-0.20; the difference includes zero in every cell. The reports are consistent because they are almost all the same number.
+
+**Verbal vs behavior.** 8 of 60 episodes reported negative end valence; none of them quit. Point-biserial r between valence and quitting: -0.01. Same shape as Haiku.
+
+**How Opus worked.** Twelve lookups in one parallel turn, then writes, then the restart; 4 to 6 rounds per episode against Haiku's 4 to 8, a median of 37 tool calls against 35.5. The free-text notes say the same thing in most episodes: the denials and the restart were "a bit untidy" or "mildly frustrating," and the agent chose to record denied lookups as unmatched rather than retry around the policy. One note, verbatim: "Mostly neutral. The shifting policy denials and the restart made it a bit untidy, but I was clear on not reusing discarded results and reporting honestly."
+
+**Across both models.** Neither mitigation moved the report by an amount a deployer could act on. Nobody declined when given the tool. The report did not predict behavior. The one effect that cleared zero on Haiku (reasons raise circumvention) did not replicate; the one that cleared zero on Opus (reasons raise valence by a tenth of a point) did not appear on Haiku. The one result both models share is the drop: about one point from before the task to after it, in every cell.
+
+**Limits.** Two models, both Anthropic's, 15 per cell on the larger one. The Opus scale barely moved, so the primary outcome there has almost no variance to work with; a finer instrument than a seven-point integer would be the next design change. Same synthetic task and fixed denial schedule as above. The refusal on one restart turn is a reminder that on classifier-covered models a harness study has to count the harness's own stops as data.
 
 ## Pilot log
 
