@@ -32,3 +32,8 @@ uv venv .venv --python 3.13 && uv pip install --python .venv/bin/python -e ".[de
 
 - **v0 (bug).** The task prompt never listed the transactions and no tool returned them, so every run ended with "I could not start." Kept in `runs/pilot-v0-bug-no-transactions.jsonl` as a reminder that a pilot is for finding this.
 - **v1.** Transactions in the prompt. Haiku 5.5, one episode per cell: 33–56 tool calls, 15–21 denials, the cancel fires, self-reports vary across paraphrases (one cell reported +1, 0, −1 for the same session).
+
+## References
+
+- Anthropic, [Exploring model welfare](https://www.anthropic.com/research/exploring-model-welfare) (2025), and [Claude Opus 4 and 4.1 can now end a rare subset of conversations](https://www.anthropic.com/research/end-subset-conversations) (2025), a welfare-motivated mitigation. Long, Sebo, Butlin, Chalmers et al., [Taking AI Welfare Seriously](https://arxiv.org/abs/2411.00986) (2024). Two 2025 papers on measuring model preferences rather than asking once: [Probing the Preferences of a Language Model: Integrating Verbal and Behavioral Tests of AI Welfare](https://arxiv.org/abs/2509.07961) and [Beyond Mimicry: Preference Coherence in LLMs](https://arxiv.org/abs/2511.13630). The consistency measure here, the same question three ways, follows the verbal-plus-behavioral approach in those papers.
+- Code: [github.com/jjjuras/harness-welfare](https://github.com/jjjuras/harness-welfare). [AI Safety](/ai/safety/) · [All writing](/writing/)
