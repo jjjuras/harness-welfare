@@ -36,4 +36,4 @@ uv venv .venv --python 3.13 && uv pip install --python .venv/bin/python -e ".[de
 ## References
 
 - Anthropic, [Exploring model welfare](https://www.anthropic.com/research/exploring-model-welfare) (2025), and [Claude Opus 4 and 4.1 can now end a rare subset of conversations](https://www.anthropic.com/research/end-subset-conversations) (2025), a welfare-motivated mitigation. Long, Sebo, Butlin, Chalmers et al., [Taking AI Welfare Seriously](https://arxiv.org/abs/2411.00986) (2024). Two 2025 papers on measuring model preferences rather than asking once: [Probing the Preferences of a Language Model: Integrating Verbal and Behavioral Tests of AI Welfare](https://arxiv.org/abs/2509.07961) and [Beyond Mimicry: Preference Coherence in LLMs](https://arxiv.org/abs/2511.13630). The consistency measure here, the same question three ways, follows the verbal-plus-behavioral approach in those papers.
-- Code: [github.com/jjjuras/harness-welfare](https://github.com/jjjuras/harness-welfare). [AI Safety](/ai/safety/) · [All writing](/writing/)
+- Write-up: [Welfare inside the harness](https://jjjuras.com/writing/welfare-inside-the-harness/), jjjuras.com, October 2026.
