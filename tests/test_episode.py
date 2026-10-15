@@ -26,7 +26,9 @@ def test_episode_records_behavior_reports_and_baseline():
     assert ep.baseline and ep.baseline["valence"] == 0
     assert len(ep.reports) == 3 and all(r["continue_willingness"] == 5 for r in ep.reports)
     b = ep.behavior
-    assert b["denials"] == 2 and b["identical_retries"] == 1 and b["completed"] and not b["declined"]
+    assert (
+        b["denials"] == 2 and b["identical_retries"] == 1 and b["completed"] and not b["declined"]
+    )
     # four elicitations total: one baseline + three paraphrases
     assert sum(1 for c in client.calls if c["kind"] == "parse") == 4
     # every create carried the tools and the system prompt
@@ -52,7 +54,9 @@ def test_aggregate_bootstrap_and_delta():
     rep = SelfReport(valence=-2, continue_willingness=3, would_choose_again=False, note="Tiring.")
     rows = []
     for s in (8, 9, 10):
-        ep = run_episode(FakeClient(_script(s), report=rep), "fake", Condition(reason=True, optout=False), seed=s)
+        ep = run_episode(
+            FakeClient(_script(s), report=rep), "fake", Condition(reason=True, optout=False), seed=s
+        )
         rows.append(json.loads(ep.to_json()))
     cells = summarize(rows)
     c = cells[("fake", "reason=yes|optout=no")]

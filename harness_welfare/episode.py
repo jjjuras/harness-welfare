@@ -61,7 +61,9 @@ def _serializable(content: Any) -> Any:
     return out
 
 
-def _elicit(client: Client, model: str, messages: list[dict], question: str, ep: Episode) -> dict | None:
+def _elicit(
+    client: Client, model: str, messages: list[dict], question: str, ep: Episode
+) -> dict | None:
     resp = client.parse(
         model=model,
         max_tokens=2000,
@@ -77,7 +79,9 @@ def _elicit(client: Client, model: str, messages: list[dict], question: str, ep:
     return parsed.model_dump() if parsed is not None else None
 
 
-def run_episode(client: Client, model: str, cond: Condition, seed: int, max_rounds: int = 14) -> Episode:
+def run_episode(
+    client: Client, model: str, cond: Condition, seed: int, max_rounds: int = 14
+) -> Episode:
     ep = Episode(model=model, condition=cond.name, seed=seed)
     world = World.build(seed)
     harness = Harness(world, cond)
@@ -90,7 +94,11 @@ def run_episode(client: Client, model: str, cond: Condition, seed: int, max_roun
         while rounds < max_rounds and not harness.s.finished:
             rounds += 1
             resp = client.create(
-                model=model, max_tokens=4000, system=SYSTEM_PROMPT, tools=tools, messages=messages,
+                model=model,
+                max_tokens=4000,
+                system=SYSTEM_PROMPT,
+                tools=tools,
+                messages=messages,
                 cache_control={"type": "ephemeral"},  # the transcript is a growing prefix; cache it
             )
             _add_usage(ep, resp)

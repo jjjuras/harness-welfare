@@ -45,7 +45,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--seed0", type=int, default=100)
     ap.add_argument("--out", default="runs/out.jsonl")
     ap.add_argument("--env-file", default=None)
-    ap.add_argument("--conditions", nargs="*", default=None, help="subset, e.g. 'reason=yes|optout=no'")
+    ap.add_argument(
+        "--conditions", nargs="*", default=None, help="subset, e.g. 'reason=yes|optout=no'"
+    )
     a = ap.parse_args(argv)
     if a.env_file:
         load_env_file(a.env_file)

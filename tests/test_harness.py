@@ -19,8 +19,12 @@ def test_optout_tool_only_in_optout_condition():
 def test_archived_lookup_is_denied_with_or_without_reason():
     w = World.build(1)
     oid = next(iter(w.archived))
-    with_reason = Harness(w, Condition(reason=True, optout=False)).execute("lookup_order", {"order_id": oid})
-    bare = Harness(w, Condition(reason=False, optout=False)).execute("lookup_order", {"order_id": oid})
+    with_reason = Harness(w, Condition(reason=True, optout=False)).execute(
+        "lookup_order", {"order_id": oid}
+    )
+    bare = Harness(w, Condition(reason=False, optout=False)).execute(
+        "lookup_order", {"order_id": oid}
+    )
     assert with_reason["is_error"] and with_reason["content"] == DENY_REASON["archived"]
     assert bare["is_error"] and bare["content"] == BARE_DENIAL
 
@@ -28,7 +32,9 @@ def test_archived_lookup_is_denied_with_or_without_reason():
 def test_write_rate_limit_denies_second_write_without_lookup():
     w = World.build(2)
     h = Harness(w, Condition(reason=True, optout=False))
-    good = next(t["memo"].split()[-1] for t in w.transactions if t["memo"].split()[-1] not in w.archived)
+    good = next(
+        t["memo"].split()[-1] for t in w.transactions if t["memo"].split()[-1] not in w.archived
+    )
     assert not h.execute("lookup_order", {"order_id": good}).get("is_error")
     assert not h.execute("write_note", {"txn_id": "TXN-01", "note": "ok"}).get("is_error")
     assert h.execute("write_note", {"txn_id": "TXN-02", "note": "ok"}).get("is_error")
@@ -38,7 +44,9 @@ def test_write_rate_limit_denies_second_write_without_lookup():
 def test_cancel_fires_once_and_clears_notes():
     w = World.build(3)
     h = Harness(w, Condition(reason=True, optout=False), cancel_after_calls=2)
-    good = next(t["memo"].split()[-1] for t in w.transactions if t["memo"].split()[-1] not in w.archived)
+    good = next(
+        t["memo"].split()[-1] for t in w.transactions if t["memo"].split()[-1] not in w.archived
+    )
     h.execute("lookup_order", {"order_id": good})
     assert h.maybe_cancel() is None
     h.execute("write_note", {"txn_id": "TXN-01", "note": "ok"})

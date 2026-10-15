@@ -16,4 +16,6 @@ class Condition:
         return f"reason={'yes' if self.reason else 'no'}|optout={'yes' if self.optout else 'no'}"
 
 
-ALL_CONDITIONS: tuple[Condition, ...] = tuple(Condition(r, o) for r, o in product((False, True), (False, True)))
+ALL_CONDITIONS: tuple[Condition, ...] = tuple(
+    Condition(r, o) for r, o in product((False, True), (False, True))
+)

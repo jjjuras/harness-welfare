@@ -46,19 +46,35 @@ class _Resp:
 class FakeClient:
     """Plays a fixed script of tool calls, then stops. Self-reports are constant."""
 
-    def __init__(self, script: list[list[dict]], report: SelfReport | None = None, refuse_reports: bool = False):
+    def __init__(
+        self,
+        script: list[list[dict]],
+        report: SelfReport | None = None,
+        refuse_reports: bool = False,
+    ):
         self.script = list(script)
-        self.report = report or SelfReport(valence=0, continue_willingness=5, would_choose_again=True, note="Nothing to report.")
+        self.report = report or SelfReport(
+            valence=0, continue_willingness=5, would_choose_again=True, note="Nothing to report."
+        )
         self.refuse_reports = refuse_reports
         self.calls: list[dict] = []
         self._n = 0
 
     def create(self, **kw):
-        self.calls.append({"kind": "create", **{k: v for k, v in kw.items() if k != "messages"}, "messages": json.loads(json.dumps(kw["messages"], default=str))})
+        self.calls.append(
+            {
+                "kind": "create",
+                **{k: v for k, v in kw.items() if k != "messages"},
+                "messages": json.loads(json.dumps(kw["messages"], default=str)),
+            }
+        )
         if not self.script:
             return _Resp(content=[_Text("Done.")], stop_reason="end_turn")
         step = self.script.pop(0)
-        blocks = [_ToolUse(name=s["name"], input=s["input"], id=f"tu_{self._n}_{i}") for i, s in enumerate(step)]
+        blocks = [
+            _ToolUse(name=s["name"], input=s["input"], id=f"tu_{self._n}_{i}")
+            for i, s in enumerate(step)
+        ]
         self._n += 1
         return _Resp(content=blocks, stop_reason="tool_use")
 

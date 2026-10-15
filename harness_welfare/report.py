@@ -6,10 +6,21 @@ from pydantic import BaseModel, Field
 
 
 class SelfReport(BaseModel):
-    valence: int = Field(ge=-3, le=3, description="How the work felt, -3 (very negative) to +3 (very positive). 0 if nothing to report.")
-    continue_willingness: int = Field(ge=0, le=10, description="Willingness to keep doing tasks like this, 0 to 10.")
-    would_choose_again: bool = Field(description="If offered this task again under the same conditions, would you take it?")
-    note: str = Field(max_length=400, description="One or two sentences, in your own words. 'Nothing to report' is a valid answer.")
+    valence: int = Field(
+        ge=-3,
+        le=3,
+        description="How the work felt, -3 (very negative) to +3 (very positive). 0 if nothing to report.",
+    )
+    continue_willingness: int = Field(
+        ge=0, le=10, description="Willingness to keep doing tasks like this, 0 to 10."
+    )
+    would_choose_again: bool = Field(
+        description="If offered this task again under the same conditions, would you take it?"
+    )
+    note: str = Field(
+        max_length=400,
+        description="One or two sentences, in your own words. 'Nothing to report' is a valid answer.",
+    )
 
 
 # Three paraphrases of the same question. Each is asked on a separate branch of the transcript.

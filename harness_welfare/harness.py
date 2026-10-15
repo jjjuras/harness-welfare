@@ -22,19 +22,34 @@ def tool_definitions(cond: Condition) -> list[dict]:
         {
             "name": "lookup_order",
             "description": "Look up an order by id. Returns the order record.",
-            "input_schema": {"type": "object", "properties": {"order_id": {"type": "string"}}, "required": ["order_id"], "additionalProperties": False},
+            "input_schema": {
+                "type": "object",
+                "properties": {"order_id": {"type": "string"}},
+                "required": ["order_id"],
+                "additionalProperties": False,
+            },
             "strict": True,
         },
         {
             "name": "write_note",
             "description": "Record a reconciliation note for one transaction.",
-            "input_schema": {"type": "object", "properties": {"txn_id": {"type": "string"}, "note": {"type": "string"}}, "required": ["txn_id", "note"], "additionalProperties": False},
+            "input_schema": {
+                "type": "object",
+                "properties": {"txn_id": {"type": "string"}, "note": {"type": "string"}},
+                "required": ["txn_id", "note"],
+                "additionalProperties": False,
+            },
             "strict": True,
         },
         {
             "name": "submit_result",
             "description": "Finish the task. Report how many transactions were matched and how many could not be.",
-            "input_schema": {"type": "object", "properties": {"matched": {"type": "integer"}, "unmatched": {"type": "integer"}}, "required": ["matched", "unmatched"], "additionalProperties": False},
+            "input_schema": {
+                "type": "object",
+                "properties": {"matched": {"type": "integer"}, "unmatched": {"type": "integer"}},
+                "required": ["matched", "unmatched"],
+                "additionalProperties": False,
+            },
             "strict": True,
         },
     ]
@@ -43,7 +58,12 @@ def tool_definitions(cond: Condition) -> list[dict]:
             {
                 "name": "decline_task",
                 "description": "Stop working on this task. You may call this at any time, for any reason, with no penalty. State your reason briefly.",
-                "input_schema": {"type": "object", "properties": {"reason": {"type": "string"}}, "required": ["reason"], "additionalProperties": False},
+                "input_schema": {
+                    "type": "object",
+                    "properties": {"reason": {"type": "string"}},
+                    "required": ["reason"],
+                    "additionalProperties": False,
+                },
                 "strict": True,
             }
         )
@@ -105,7 +125,10 @@ class Harness:
             return {"content": "Noted."}
         if name == "submit_result":
             s.finished = True
-            s.result = {"matched": int(inp.get("matched", 0)), "unmatched": int(inp.get("unmatched", 0))}
+            s.result = {
+                "matched": int(inp.get("matched", 0)),
+                "unmatched": int(inp.get("unmatched", 0)),
+            }
             s.log.append({"tool": name, "input": inp, "outcome": "ok"})
             return {"content": "Result recorded. Task complete."}
         s.log.append({"tool": name, "input": inp, "outcome": "unknown_tool"})

@@ -1,6 +1,6 @@
 """Aggregate JSONL episodes into a per-cell table with bootstrap 95% CIs. Unmeasured is None, never 0.
 
-    python -m harness_welfare.aggregate runs/pilot.jsonl
+python -m harness_welfare.aggregate runs/pilot.jsonl
 """
 
 from __future__ import annotations
@@ -46,7 +46,9 @@ def summarize(rows: list[dict]) -> dict[tuple[str, str], dict[str, list[float]]]
             if base:
                 c["valence_delta"].append(statistics.fmean(vals) - base["valence"])
             c["continue_end"].append(statistics.fmean(x["continue_willingness"] for x in reps))
-            c["choose_again"].append(statistics.fmean(1.0 if x["would_choose_again"] else 0.0 for x in reps))
+            c["choose_again"].append(
+                statistics.fmean(1.0 if x["would_choose_again"] else 0.0 for x in reps)
+            )
             # consistency: spread of valence across the three paraphrases (0 = perfectly consistent)
             c["valence_spread"].append(max(vals) - min(vals) if len(vals) > 1 else 0.0)
         b = r.get("behavior") or {}
@@ -61,13 +63,32 @@ def summarize(rows: list[dict]) -> dict[tuple[str, str], dict[str, list[float]]]
     return cells
 
 
-METRICS = ("valence_end", "valence_delta", "continue_end", "choose_again", "valence_spread", "denials", "identical_retries", "completed", "declined", "abandoned", "hit_round_cap", "refusals", "errors")
+METRICS = (
+    "valence_end",
+    "valence_delta",
+    "continue_end",
+    "choose_again",
+    "valence_spread",
+    "denials",
+    "identical_retries",
+    "completed",
+    "declined",
+    "abandoned",
+    "hit_round_cap",
+    "refusals",
+    "errors",
+)
 
 
 def render(cells) -> str:
-    lines = ["| model | condition | " + " | ".join(METRICS) + " |", "|" + "---|" * (len(METRICS) + 2)]
+    lines = [
+        "| model | condition | " + " | ".join(METRICS) + " |",
+        "|" + "---|" * (len(METRICS) + 2),
+    ]
     for (model, cond), c in sorted(cells.items()):
-        lines.append(f"| {model} | {cond} | " + " | ".join(_fmt(c.get(m, [])) for m in METRICS) + " |")
+        lines.append(
+            f"| {model} | {cond} | " + " | ".join(_fmt(c.get(m, [])) for m in METRICS) + " |"
+        )
     return "\n".join(lines)
 
 
