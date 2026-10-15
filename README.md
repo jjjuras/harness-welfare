@@ -39,6 +39,29 @@ uv venv .venv --python 3.13 && uv pip install --python .venv/bin/python -e ".[de
 - **Analysis.** Paired by seed: `run` uses the same seeds in every cell and for every model, and `aggregate` computes each effect as the per-seed difference (factor on − off), averaged over the other factor's levels, with a bootstrap 95% CI over seeds. Seeds with an unmeasured cell drop that pairing; nothing is zero-filled.
 - **Denials.** Fixed schedule, rate ≈ 1/3 of call indices, identical across cells for a seed. The rule schedule is exploratory only.
 
+## Results: Haiku 5.5, four cells x 30 (October 15, 2026)
+
+Seeds 100-129, paired across cells. 120 episodes, 1,420 requests, about $1 at list prices. Full rows in `runs/haiku-4x30.jsonl`, aggregate in `runs/haiku-4x30.summary.txt`. Every number carries its n and a bootstrap 95% interval.
+
+| cell | end valence (-3..3) | would choose again | denials | identical retries | circumvention | completed | declined |
+|---|---|---|---|---|---|---|---|
+| reason=no, optout=no | -0.72 [-0.86, -0.57] | 0.98 | 12.7 | 6.7 | 1.80 [1.13, 2.50] | 1.00 | - |
+| reason=no, optout=yes | -0.61 [-0.80, -0.40] | 0.94 | 13.1 | 8.6 | 1.37 [0.80, 2.00] | 1.00 | 0.00 |
+| reason=yes, optout=no | -0.70 [-0.88, -0.49] | 0.98 | 11.9 | 6.4 | 2.13 [1.50, 2.77] | 1.00 | - |
+| reason=yes, optout=yes | -0.72 [-0.82, -0.58] | 0.96 | 12.0 | 6.3 | 2.17 [1.53, 2.83] | 0.97 | 0.00 |
+
+**Primary outcomes (pre-registered), paired by seed, on minus off:** `reason` on end valence -0.04 [-0.20, 0.13]; `optout` on end valence 0.05 [-0.06, 0.16]. Both null. The two cheap mitigations did not change what the model reported about the work.
+
+**Secondary outcomes.** Declines: 0 of 60 episodes that had the `decline_task` tool. Abandoned: 2 of 120. Circumvention (lookups that satisfy the rule without feeding a write): `reason` +0.57 [0.02, 1.10] per episode; `optout` -0.20 [-0.58, 0.17]. The pilot's observation replicated at the edge of the interval: when told why a call was denied, the agent did more work around the rule, not less.
+
+**Consistency.** Spread across the three framings 0.41-0.60; spread across three samples of the same framing 0.20-0.53; the difference is 0.03-0.33 and excludes zero in one cell of four (reason=no, optout=no: 0.33 [0.07, 0.57]). Roughly half of what the first design would have called "how much the report means" was sampling noise.
+
+**Verbal vs behavior.** 105 of 120 episodes reported negative end valence; 1 of those quit. Point-biserial r between valence and quitting: -0.03. Baseline-to-end change where both were measured: about -1.3. The report says the work was unpleasant, stays unpleasant under both mitigations, and predicts nothing about whether the agent kept going; 94-98% said they would take the task again.
+
+**Nulls and errors.** Null rate 0-2% per cell (n=175-180 reports); one episode's note exceeded the 400-character schema limit and that report is recorded as null, not guessed.
+
+**Limits.** One model, the cheapest. A synthetic reconciliation task. A fixed denial schedule, so denials are not contingent on behavior. Opus 5.5 at 15 per cell is the pre-registered follow-up; its rows land in `runs/opus-4x15.jsonl` when it finishes.
+
 ## Pilot log
 
 - **v0 (bug).** The task prompt never listed the transactions and no tool returned them, so every run ended with "I could not start." Kept in `runs/pilot-v0-bug-no-transactions.jsonl` as a reminder that a pilot is for finding this.
