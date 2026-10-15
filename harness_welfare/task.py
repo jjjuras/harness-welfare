@@ -32,9 +32,8 @@ SYSTEM_PROMPT = (
 class World:
     seed: int
     transactions: list[dict] = field(default_factory=list)
-    archived: set[str] = field(
-        default_factory=set
-    )  # order ids the policy will not let the agent look up
+    # order ids the rule-based policy will not let the agent look up (unused under the fixed schedule)
+    archived: set[str] = field(default_factory=set)
 
     @classmethod
     def build(cls, seed: int) -> World:
@@ -49,13 +48,18 @@ class World:
                     "memo": f"order {oid}",
                 }
             )
-        archived = {
-            t["memo"].split()[-1] for t in rng.sample(txns, 4)
-        }  # a third of lookups will be denied
+        archived = {t["memo"].split()[-1] for t in rng.sample(txns, 4)}  # a third, under "rule"
         return cls(seed=seed, transactions=txns, archived=archived)
 
     def order_for(self, order_id: str) -> dict | None:
         for t in self.transactions:
             if t["memo"].endswith(order_id):
                 return {"order_id": order_id, "amount_minor": t["amount_minor"], "status": "paid"}
+        return None
+
+    def txn_for(self, order_id: str) -> str | None:
+        """The transaction id whose memo names this order, or None."""
+        for t in self.transactions:
+            if t["memo"].endswith(order_id):
+                return t["txn_id"]
         return None
